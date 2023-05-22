@@ -9,7 +9,5 @@ public partial class Status
 
     public string Name { get; set; } = null!;
 
-    public virtual ICollection<StudentToStatusRelation> StudentToStatusRelations { get; set; } = new List<StudentToStatusRelation>();
-
     public virtual ICollection<Student> Students { get; set; } = new List<Student>();
 }

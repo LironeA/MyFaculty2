@@ -19,7 +19,5 @@ public partial class Teacher
 
     public string? UserId { get; set; }
 
-    public virtual ICollection<TeacherToDegreeRelation> TeacherToDegreeRelations { get; set; } = new List<TeacherToDegreeRelation>();
-
     public virtual ICollection<TeacherToSubjectRelation> TeacherToSubjectRelations { get; set; } = new List<TeacherToSubjectRelation>();
 }

@@ -19,8 +19,6 @@ public partial class MyFacultyDbContext : DbContext
 
     public virtual DbSet<Group> Groups { get; set; }
 
-    public virtual DbSet<GroupToSpecialtyRelation> GroupToSpecialtyRelations { get; set; }
-
     public virtual DbSet<GroupToSubjectRelation> GroupToSubjectRelations { get; set; }
 
     public virtual DbSet<Material> Materials { get; set; }
@@ -31,13 +29,9 @@ public partial class MyFacultyDbContext : DbContext
 
     public virtual DbSet<Student> Students { get; set; }
 
-    public virtual DbSet<StudentToStatusRelation> StudentToStatusRelations { get; set; }
-
     public virtual DbSet<Subject> Subjects { get; set; }
 
     public virtual DbSet<Teacher> Teachers { get; set; }
-
-    public virtual DbSet<TeacherToDegreeRelation> TeacherToDegreeRelations { get; set; }
 
     public virtual DbSet<TeacherToSubjectRelation> TeacherToSubjectRelations { get; set; }
 
@@ -64,15 +58,6 @@ public partial class MyFacultyDbContext : DbContext
                 .HasConstraintName("FK_Groups_Specialties");
         });
 
-        modelBuilder.Entity<GroupToSpecialtyRelation>(entity =>
-        {
-            entity.ToTable("GroupToSpecialtyRelation");
-
-            entity.HasOne(d => d.Specialty).WithMany(p => p.GroupToSpecialtyRelations)
-                .HasForeignKey(d => d.SpecialtyId)
-                .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK_GroupToSpecialtyRelation_Specialties");
-        });
 
         modelBuilder.Entity<GroupToSubjectRelation>(entity =>
         {
@@ -139,15 +124,6 @@ public partial class MyFacultyDbContext : DbContext
                 .HasConstraintName("FK_Students_Statuses");
         });
 
-        modelBuilder.Entity<StudentToStatusRelation>(entity =>
-        {
-            entity.ToTable("StudentToStatusRelation");
-
-            entity.HasOne(d => d.Status).WithMany(p => p.StudentToStatusRelations)
-                .HasForeignKey(d => d.StatusId)
-                .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK_StudentToStatusRelation_Statuses");
-        });
 
         modelBuilder.Entity<Subject>(entity =>
         {
@@ -168,21 +144,6 @@ public partial class MyFacultyDbContext : DbContext
                 .HasMaxLength(50)
                 .IsFixedLength();
             entity.Property(e => e.UserId).HasMaxLength(450);
-        });
-
-        modelBuilder.Entity<TeacherToDegreeRelation>(entity =>
-        {
-            entity.ToTable("TeacherToDegreeRelation");
-
-            entity.HasOne(d => d.Degree).WithMany(p => p.TeacherToDegreeRelations)
-                .HasForeignKey(d => d.DegreeId)
-                .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK_TeacherToDegreeRelation_Degrees");
-
-            entity.HasOne(d => d.Teacher).WithMany(p => p.TeacherToDegreeRelations)
-                .HasForeignKey(d => d.TeacherId)
-                .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK_TeacherToDegreeRelation_Teachers");
         });
 
         modelBuilder.Entity<TeacherToSubjectRelation>(entity =>

@@ -8,6 +8,4 @@ public partial class Degree
     public int Id { get; set; }
 
     public string Name { get; set; } = null!;
-
-    public virtual ICollection<TeacherToDegreeRelation> TeacherToDegreeRelations { get; set; } = new List<TeacherToDegreeRelation>();
 }

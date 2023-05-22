@@ -9,7 +9,5 @@ public partial class Specialty
 
     public string Name { get; set; } = null!;
 
-    public virtual ICollection<GroupToSpecialtyRelation> GroupToSpecialtyRelations { get; set; } = new List<GroupToSpecialtyRelation>();
-
     public virtual ICollection<Group> Groups { get; set; } = new List<Group>();
 }
