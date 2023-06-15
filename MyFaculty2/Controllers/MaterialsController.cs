@@ -45,10 +45,27 @@ namespace MyFaculty2.Controllers
         }
 
         // GET: Materials/Create
-        public IActionResult Create()
+        public IActionResult Create(int? subjectId)
         {
-            ViewData["SubjectId"] = new SelectList(_context.Subjects, "Id", "Id");
+            createSelectList(subjectId);
+
             return View();
+        }
+
+        private void createSelectList(int? subjectId)
+        {
+            var subject = _context.Subjects.Find(subjectId);
+            List<Subject> subjects = new List<Subject>();
+            if (subject != null)
+            {
+                subjects.Add(subject);
+            }
+            else
+            {
+                subjects = _context.Subjects.ToList();
+            }
+
+            ViewData["SubjectId"] = new SelectList(subjects, "Id", "Name");
         }
 
         // POST: Materials/Create
@@ -64,7 +81,7 @@ namespace MyFaculty2.Controllers
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["SubjectId"] = new SelectList(_context.Subjects, "Id", "Id", material.SubjectId);
+            createSelectList(material.SubjectId);
             return View(material);
         }
 
@@ -117,7 +134,7 @@ namespace MyFaculty2.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["SubjectId"] = new SelectList(_context.Subjects, "Id", "Id", material.SubjectId);
+            ViewData["SubjectId"] = new SelectList(_context.Subjects, "Id", "Name", material.SubjectId);
             return View(material);
         }
 

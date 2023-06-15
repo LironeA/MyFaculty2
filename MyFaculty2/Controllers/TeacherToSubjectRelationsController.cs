@@ -46,11 +46,44 @@ namespace MyFaculty2.Controllers
         }
 
         // GET: TeacherToSubjectRelations/Create
-        public IActionResult Create()
+        public IActionResult Create(int? teacherId = -1, int? subjectId = -1)
         {
-            ViewData["SubjectId"] = new SelectList(_context.Subjects, "Id", "Id");
-            ViewData["TeacherId"] = new SelectList(_context.Teachers, "Id", "Id");
+            var teacherToSubjectRelation = _context.TeacherToSubjectRelations.FirstOrDefault(t => t.TeacherId == teacherId && t.SubjectId == subjectId);
+            if (teacherToSubjectRelation != null)
+            {
+                return RedirectToAction(actionName: "Details", controllerName: "Teachers", routeValues: new { id = teacherId });
+            }
+            CreateSelectLists(teacherId, subjectId);
             return View();
+        }
+
+        private void CreateSelectLists(int? teacherId, int? subjectId)
+        {
+            Teacher teacher = _context.Teachers.Find(teacherId);
+            Subject subject = _context.Subjects.Find(subjectId);
+
+            List<Teacher> teachers = new List<Teacher>();
+            if (teacher != null)
+            {
+                teachers.Add(teacher);
+            }
+            else
+            {
+                teachers = _context.Teachers.ToList();
+            }
+
+            List<Subject> subjects = new List<Subject>();
+            if (subject != null)
+            {
+                subjects.Add(subject);
+            }
+            else
+            {
+                subjects = _context.Subjects.ToList();
+            }
+
+            ViewData["TeacherId"] = new SelectList(teachers, "Id", "PIB");
+            ViewData["SubjectId"] = new SelectList(subjects, "Id", "Name");
         }
 
         // POST: TeacherToSubjectRelations/Create
@@ -64,10 +97,9 @@ namespace MyFaculty2.Controllers
             {
                 _context.Add(teacherToSubjectRelation);
                 await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                return RedirectToAction(actionName:"Details", controllerName: "Teachers", routeValues: new { id = teacherToSubjectRelation.TeacherId });
             }
-            ViewData["SubjectId"] = new SelectList(_context.Subjects, "Id", "Id", teacherToSubjectRelation.SubjectId);
-            ViewData["TeacherId"] = new SelectList(_context.Teachers, "Id", "Id", teacherToSubjectRelation.TeacherId);
+            CreateSelectLists(teacherToSubjectRelation.Teacher.Id, teacherToSubjectRelation.Subject.Id);
             return View(teacherToSubjectRelation);
         }
 
@@ -164,6 +196,7 @@ namespace MyFaculty2.Controllers
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
+
 
         private bool TeacherToSubjectRelationExists(int id)
         {

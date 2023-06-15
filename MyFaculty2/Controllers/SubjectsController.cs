@@ -34,7 +34,9 @@ namespace MyFaculty2.Controllers
                 return NotFound();
             }
 
-            var subject = await _context.Subjects
+            var subject = await _context.Subjects.Include(s => s.TeacherToSubjectRelations).ThenInclude(s => s.Teacher)
+                .Include(s => s.GroupToSubjectRelations).ThenInclude(s => s.Group)
+                .Include(s => s.Materials)
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (subject == null)
             {
@@ -126,6 +128,7 @@ namespace MyFaculty2.Controllers
             }
 
             var subject = await _context.Subjects
+                .Include(x => x.Materials)
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (subject == null)
             {

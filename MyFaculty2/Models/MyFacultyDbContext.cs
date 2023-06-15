@@ -44,8 +44,7 @@ public partial class MyFacultyDbContext : DbContext
         modelBuilder.Entity<Degree>(entity =>
         {
             entity.Property(e => e.Name)
-                .HasMaxLength(50)
-                .IsFixedLength();
+                .HasMaxLength(50);
         });
 
         modelBuilder.Entity<Group>(entity =>
@@ -65,8 +64,8 @@ public partial class MyFacultyDbContext : DbContext
 
             entity.Property(e => e.Id).ValueGeneratedOnAdd();
 
-            entity.HasOne(d => d.IdNavigation).WithOne(p => p.GroupToSubjectRelation)
-                .HasForeignKey<GroupToSubjectRelation>(d => d.Id)
+            entity.HasOne(d => d.Group).WithMany(p => p.GroupToSubjectRelations)
+                .HasForeignKey(d => d.GroupId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK_GroupToSubjectRelation_Groups1");
 
@@ -90,8 +89,7 @@ public partial class MyFacultyDbContext : DbContext
         modelBuilder.Entity<Specialty>(entity =>
         {
             entity.Property(e => e.Name)
-                .HasMaxLength(50)
-                .IsFixedLength();
+                .HasMaxLength(50);
         });
 
         modelBuilder.Entity<Status>(entity =>
@@ -99,8 +97,7 @@ public partial class MyFacultyDbContext : DbContext
             entity.HasKey(e => e.Id).HasName("PK_Statuse");
 
             entity.Property(e => e.Name)
-                .HasMaxLength(50)
-                .IsFixedLength();
+                .HasMaxLength(50);
         });
 
         modelBuilder.Entity<Student>(entity =>
@@ -135,15 +132,16 @@ public partial class MyFacultyDbContext : DbContext
         {
             entity.Property(e => e.DateOfBirth).HasColumnType("date");
             entity.Property(e => e.LastName)
-                .HasMaxLength(50)
-                .IsFixedLength();
+                .HasMaxLength(50);
             entity.Property(e => e.Name)
-                .HasMaxLength(50)
-                .IsFixedLength();
+                .HasMaxLength(50);
             entity.Property(e => e.Surname)
-                .HasMaxLength(50)
-                .IsFixedLength();
+                .HasMaxLength(50);
             entity.Property(e => e.UserId).HasMaxLength(450);
+            entity.HasOne(d => d.Degree).WithMany(t => t.Teachers)
+                .HasForeignKey(d => d.DegreeId)
+                .OnDelete(DeleteBehavior.Restrict)
+                .HasConstraintName("FK_Teachers_Degrees");
         });
 
         modelBuilder.Entity<TeacherToSubjectRelation>(entity =>

@@ -7,18 +7,25 @@ namespace MyFaculty2.Controllers
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
+        private readonly MyFacultyDbContext _context;
 
-        public HomeController(ILogger<HomeController> logger)
+        public HomeController(ILogger<HomeController> logger, MyFacultyDbContext context)
         {
             _logger = logger;
+            _context = context;
         }
 
         public IActionResult Index()
-        {
+        { 
             return View();
         }
 
         public IActionResult Privacy()
+        {
+            return View();
+        }
+
+        public IActionResult AdminPage() 
         {
             return View();
         }

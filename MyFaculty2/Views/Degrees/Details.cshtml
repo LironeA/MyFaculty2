@@ -1,13 +1,12 @@
 ﻿@model MyFaculty2.Models.Degree
 
 @{
-    ViewData["Title"] = "Details";
+    ViewData["Title"] = "Ступінь " + Model.Name;
 }
 
-<h1>Details</h1>
+<h1>Деталі ступеня "@Model.Name"</h1>
 
 <div>
-    <h4>Degree</h4>
     <hr />
     <dl class="row">
         <dt class = "col-sm-2">
@@ -19,6 +18,6 @@
     </dl>
 </div>
 <div>
-    <a asp-action="Edit" asp-route-id="@Model?.Id">Edit</a> |
-    <a asp-action="Index">Back to List</a>
+    <a asp-action="Edit" asp-route-id="@Model?.Id">Редагувати</a> |
+    <a asp-action="Index">Повернутись до списку</a>
 </div>

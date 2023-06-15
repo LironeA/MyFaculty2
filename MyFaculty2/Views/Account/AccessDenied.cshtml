@@ -1,0 +1,22 @@
+﻿@*
+    Root/Account/AccessDenied
+*@
+
+@{
+    ViewData["Title"] = "Access Denied";
+}
+
+<h1>Access Denied</h1>
+<h2>Спробуйте зайти з іншого акаунту або зв`яжіться з нами :)</h2>
+
+@if(User.Identity.IsAuthenticated)
+{
+    <form method="post" asp-controller="Account" asp-action="Logout">
+        <input type="submit" value="Вихід" class="btn btn-primary" />
+    </form>
+}
+else
+{
+    <a asp-controller="Account" asp-action="Login">Вхід</a>
+    <a asp-controller="Account" asp-action="Register">Реєстрація</a>
+}

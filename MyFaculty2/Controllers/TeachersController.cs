@@ -22,7 +22,7 @@ namespace MyFaculty2.Controllers
         public async Task<IActionResult> Index()
         {
               return _context.Teachers != null ? 
-                          View(await _context.Teachers.ToListAsync()) :
+                          View(await _context.Teachers.Include(s => s.Degree).ToListAsync()) :
                           Problem("Entity set 'MyFacultyDbContext.Teachers'  is null.");
         }
 
@@ -34,19 +34,19 @@ namespace MyFaculty2.Controllers
                 return NotFound();
             }
 
-            var teacher = await _context.Teachers
+            var teacher = await _context.Teachers.Include(s => s.Degree).Include(s => s.TeacherToSubjectRelations).ThenInclude(s => s.Subject)
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (teacher == null)
             {
                 return NotFound();
             }
-
             return View(teacher);
         }
 
         // GET: Teachers/Create
         public IActionResult Create()
         {
+            ViewData["DegreeList"] = new SelectList(_context.Degrees, "Id", "Name");
             return View();
         }
 
@@ -63,6 +63,8 @@ namespace MyFaculty2.Controllers
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
+
+            ViewData["DegreeList"] = new SelectList(_context.Degrees, "Id", "Name");
             return View(teacher);
         }
 
@@ -74,11 +76,12 @@ namespace MyFaculty2.Controllers
                 return NotFound();
             }
 
-            var teacher = await _context.Teachers.FindAsync(id);
+            var teacher = await _context.Teachers.Include(t => t.Degree).FirstOrDefaultAsync(t => t.Id == id);
             if (teacher == null)
             {
                 return NotFound();
             }
+            ViewData["DegreeList"] = new SelectList(_context.Degrees,"Id","Name");
             return View(teacher);
         }
 

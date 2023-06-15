@@ -21,7 +21,7 @@ namespace MyFaculty2.Controllers
         // GET: GroupToSubjectRelations
         public async Task<IActionResult> Index()
         {
-            var myFacultyDbContext = _context.GroupToSubjectRelations.Include(g => g.IdNavigation).Include(g => g.Subject);
+            var myFacultyDbContext = _context.GroupToSubjectRelations.Include(g => g.Group).Include(g => g.Subject);
             return View(await myFacultyDbContext.ToListAsync());
         }
 
@@ -34,7 +34,7 @@ namespace MyFaculty2.Controllers
             }
 
             var groupToSubjectRelation = await _context.GroupToSubjectRelations
-                .Include(g => g.IdNavigation)
+                .Include(g => g.Group)
                 .Include(g => g.Subject)
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (groupToSubjectRelation == null)
@@ -46,12 +46,48 @@ namespace MyFaculty2.Controllers
         }
 
         // GET: GroupToSubjectRelations/Create
-        public IActionResult Create()
+        public IActionResult Create(int? teacherId = -1, int? subjectId = -1)
         {
-            ViewData["Id"] = new SelectList(_context.Groups, "Id", "Id");
-            ViewData["SubjectId"] = new SelectList(_context.Subjects, "Id", "Id");
+            var groupToSubjectrelation = _context.GroupToSubjectRelations.FirstOrDefault(t => t.GroupId == teacherId && t.SubjectId == subjectId);
+            if(groupToSubjectrelation != null)
+            {
+                return RedirectToAction(actionName: "Details", controllerName: "Groups", routeValues: new { id = teacherId });
+            }
+            CreateSelectLists(teacherId, subjectId);
             return View();
         }
+
+        private void CreateSelectLists(int? groupId, int? subjectId)
+        {
+            Group group = _context.Groups.FirstOrDefault(t => t.Id == groupId);
+            Subject subject = _context.Subjects.FirstOrDefault(s => s.Id == subjectId);
+
+            List<Group> groups = new List<Group>();
+            if (group != null)
+            {
+                groups.Add(group);
+            }
+            else
+            {
+                groups = _context.Groups.ToList();
+            }
+            
+            List<Subject> subjects = new List<Subject>();
+
+            if (subject != null)
+            {
+                subjects.Add(subject);
+            }
+            else
+            {
+                subjects = _context.Subjects.ToList();
+            }
+
+            ViewData["GroupId"] = new SelectList(groups, "Id", "Name");
+            ViewData["SubjectId"] = new SelectList(subjects, "Id", "Name");
+        }
+
+
 
         // POST: GroupToSubjectRelations/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to.
@@ -66,8 +102,7 @@ namespace MyFaculty2.Controllers
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["Id"] = new SelectList(_context.Groups, "Id", "Id", groupToSubjectRelation.Id);
-            ViewData["SubjectId"] = new SelectList(_context.Subjects, "Id", "Id", groupToSubjectRelation.SubjectId);
+            CreateSelectLists(groupToSubjectRelation.GroupId, groupToSubjectRelation.SubjectId);
             return View(groupToSubjectRelation);
         }
 
@@ -135,7 +170,7 @@ namespace MyFaculty2.Controllers
             }
 
             var groupToSubjectRelation = await _context.GroupToSubjectRelations
-                .Include(g => g.IdNavigation)
+                .Include(g => g.Group)
                 .Include(g => g.Subject)
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (groupToSubjectRelation == null)

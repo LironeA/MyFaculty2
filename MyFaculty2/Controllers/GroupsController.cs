@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -35,7 +37,11 @@ namespace MyFaculty2.Controllers
 
             var @group = await _context.Groups
                 .Include(a => a.Specialty)
+                .Include(a => a.Students)
+                .Include(a => a.GroupToSubjectRelations)
+                .ThenInclude(a => a.Subject)
                 .FirstOrDefaultAsync(m => m.Id == id);
+            @group.Students.OrderBy(a => a.Surname);
             if (@group == null)
             {
                 return NotFound();
@@ -43,17 +49,18 @@ namespace MyFaculty2.Controllers
 
             return View(@group);
         }
-
+        [Authorize(Roles = "admin, teacher")]
         // GET: Groups/Create
         public IActionResult Create()
         {
-            ViewData["SpecialtyId"] = new SelectList(_context.Specialties, "Id", "Id");
+            ViewData["SpecialtyId"] = new SelectList(_context.Specialties, "Id", "Name");
             return View();
         }
 
         // POST: Groups/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+        [Authorize(Roles = "admin, teacher")]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Id,Name,SpecialtyId")] Group @group)
@@ -64,10 +71,10 @@ namespace MyFaculty2.Controllers
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["SpecialtyId"] = new SelectList(_context.Specialties, "Id", "Id", @group.SpecialtyId);
+            ViewData["SpecialtyId"] = new SelectList(_context.Specialties, "Id", "Name", @group.SpecialtyId);
             return View(@group);
         }
-
+        [Authorize(Roles = "admin, teacher")]
         // GET: Groups/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
@@ -81,13 +88,14 @@ namespace MyFaculty2.Controllers
             {
                 return NotFound();
             }
-            ViewData["SpecialtyId"] = new SelectList(_context.Specialties, "Id", "Id", @group.SpecialtyId);
+            ViewData["SpecialtyId"] = new SelectList(_context.Specialties, "Id", "Name", @group.SpecialtyId);
             return View(@group);
         }
 
         // POST: Groups/Edit/5
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+        [Authorize(Roles = "admin, teacher")]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("Id,Name,SpecialtyId")] Group @group)
@@ -117,10 +125,10 @@ namespace MyFaculty2.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["SpecialtyId"] = new SelectList(_context.Specialties, "Id", "Id", @group.SpecialtyId);
+            ViewData["SpecialtyId"] = new SelectList(_context.Specialties, "Id", "Name", @group.SpecialtyId);
             return View(@group);
         }
-
+        [Authorize(Roles = "admin, teacher")]
         // GET: Groups/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
@@ -139,7 +147,7 @@ namespace MyFaculty2.Controllers
 
             return View(@group);
         }
-
+        [Authorize(Roles = "admin, teacher")]
         // POST: Groups/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
@@ -158,7 +166,7 @@ namespace MyFaculty2.Controllers
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
-
+        [Authorize(Roles = "admin, teacher")]
         private bool GroupExists(int id)
         {
           return (_context.Groups?.Any(e => e.Id == id)).GetValueOrDefault();

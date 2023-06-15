@@ -3,6 +3,35 @@
 }
 
 <div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+    <h1 class="display-4">MyFaculty</h1>
+</div>
+
+@if(User.Identity.IsAuthenticated)
+{
+    <h2>Ви увійшли як @User.Identity.Name</h2>
+    <form method="post" asp-controller="Account" asp-action="Logout">
+        <input type="submit" value="Вихід" class="btn btn-primary" />
+    </form>
+}
+else
+{
+    <a asp-controller="Account" asp-action="Login">Вхід</a>
+    <a asp-controller="Account" asp-action="Register">Реєстрація</a>
+}
+
+<div>
+     <ul class="nav flex-column">
+        <li class="nav-item">
+            <a class="nav-link" asp-controller="Students" asp-action="Index">Список студентів</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" asp-controller="Groups" asp-action="Index">Список груп</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" asp-controller="Teachers" asp-action="Index">Список викладаів</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" asp-controller="Subjects" asp-action="Index">Список предметів</a>
+        </li>
+     </ul>
 </div>

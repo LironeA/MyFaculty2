@@ -1,12 +1,11 @@
 ﻿@model MyFaculty2.Models.Teacher
 
 @{
-    ViewData["Title"] = "Edit";
+    ViewData["Title"] = "Редагувати викладача";
 }
 
-<h1>Edit</h1>
+<h1>Редагувати викладача</h1>
 
-<h4>Teacher</h4>
 <hr />
 <div class="row">
     <div class="col-md-4">
@@ -35,23 +34,23 @@
             </div>
             <div class="form-group">
                 <label asp-for="DegreeId" class="control-label"></label>
-                <input asp-for="DegreeId" class="form-control" />
+                 <select asp-for="DegreeId" class="form-control" asp-items="ViewBag.DegreeList"></select>
                 <span asp-validation-for="DegreeId" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="UserId" class="control-label"></label>
-                <input asp-for="UserId" class="form-control" />
+               <input asp-for="UserId" class="form-control" />
                 <span asp-validation-for="UserId" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <input type="submit" value="Save" class="btn btn-primary" />
+                <input type="submit" value="Зберегти зміни" class="btn btn-primary" />
             </div>
         </form>
     </div>
 </div>
 
 <div>
-    <a asp-action="Index">Back to List</a>
+    <a asp-action="Index">Повернутись до списку</a>
 </div>
 
 @section Scripts {

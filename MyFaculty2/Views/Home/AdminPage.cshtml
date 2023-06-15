@@ -1,0 +1,59 @@
+﻿﻿@*
+        Path: Root/AdminPage
+*@
+
+@{
+    ViewData["Title"] = "Admin Page";
+}
+
+<h1>Панель адміна</h1>
+
+<div>
+   <h4>Користувачі</h4>
+    <hr />
+    <ul class="nav flex-column">
+        <li class="nav-item">
+            <a class="nav-link" asp-controller="Account" asp-action="Index">Users</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" asp-controller="Roles" asp-action="Index">Roles</a>
+        </li>
+    </ul>
+</div>
+<div>
+    <h4>Основні табоиці</h4>
+    <hr />
+    <ul class="nav flex-column">
+        <li class="nav-item">
+            <a class="nav-link" asp-controller="Students" asp-action="Index">Students</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" asp-controller="Groups" asp-action="Index">Groups</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" asp-controller="Degrees" asp-action="Index">Degrees</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" asp-controller="Teachers" asp-action="Index">Teachers</a>
+        </li>
+
+
+        <li class="nav-item">
+            <a class="nav-link" asp-controller="Specialties" asp-action="Index">Specialties</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" asp-controller="Subjects" asp-action="Index">Subjects</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" asp-controller="Materials" asp-action="Index">Subjects</a>
+        </li>
+        <h4>Допоміжні таблиці</h4>
+        <hr />
+        <li class="nav-item">
+            <a class="nav-link" asp-controller="GroupToSubjectRelations" asp-action="Index">GroupToSubjectRelations</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" asp-controller="TeacherToSubjectRelations" asp-action="Index">TeacherToSubjectRelations</a>
+        </li>
+    </ul>
+</div>
